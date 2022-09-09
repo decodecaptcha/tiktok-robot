@@ -96,6 +96,6 @@ if __name__ == '__main__':
     find_id_click('com.tencent.wework:id/bh6')
     print(3)
 
-    input()
     input('任意键退出')
+    input()
     print('程序结束')
