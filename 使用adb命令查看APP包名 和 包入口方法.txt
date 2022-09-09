@@ -1,0 +1,15 @@
+方法一:
+打开log
+adb logcat -v time >C:\Users\admin\Desktop\log.txt
+手机只启动目标app
+
+
+方法二:
+使用 APP-Decompile-v0.2 反编译, 查看 AndroidManifest.xml 文件
+
+方法三:
+aapt dump badging C:\Users\admin\Desktop\aaptDemo\WeChat_6.5.14_apkcombo.com.apk | findstr package
+
+aapt dump badging C:\Users\admin\Desktop\aaptDemo\WeChat_6.5.14_apkcombo.com.apk | findstr launchable-activit
+
+
