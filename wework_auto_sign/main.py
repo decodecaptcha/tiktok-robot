@@ -3,14 +3,19 @@ import json
 import datetime
 import random
 import string
-from time import sleep
+import time
+import time
 from apscheduler.schedulers.blocking import BlockingScheduler
 from loguru import logger
 
+from ppadb.client import Client as AdbClient
+from wework_sign import WeWorkSign
+
 # --------------- 定时任务 (可修改) --------------- #
-# 默认是每天的9：30 分执行任务(24小时制, 可自定义)
-JOB_HOUR = 7
+# 默认是每天的18：30 分执行任务(24小时制, 可选)
+JOB_HOUR = 18
 JOB_MINUTE = 30
+
 
 print(r"""
  __      _______      _____  _ __| | __     __ _ _   _| |_ ___      ___(_) __ _ _ __  
@@ -42,61 +47,65 @@ def write_file(abspath, data: str):
         return None
 
 
-def read_cookie(abspath):
-    text = read_file(abspath)
-    dict_data = json.loads(text)
-    logger.debug(f'read_file: {abspath}, text: {text}, status: successful')
-    return dict_data
+def Listen_on_connection(host, port):
+    while 1:
+        client = AdbClient()
+        response = client.remote_connect(host, port)
+        time.sleep(0.5)
+        if response:
+            break
+    return True
 
 
-def write_cookie(abspath, dict_data: dict):
-    data = json.dumps(dict_data)
-    write_file(abspath, data)
-    logger.debug(f'write_cookie: {abspath}, status: successful')
-
-
-def clear_cookie(abspath):
-    """清除过期的cookie"""
-    dict_data = ''
-    write_file(abspath, dict_data)
-
+host = '192.168.11.195'
+port = 5555
+deviceName = f'{host}:{port}'
+appPackage = 'com.tencent.wework'
+appActivity = '.launch.LaunchSplashActivity'
 
 def login():
     pass
+
 
 def job():
     # 每日任务
     logger.debug("每日任务已开启...")
 
-    # 签到
-    logger.debug('"签到"任务已开启...')
-    try:
-        pass
-        logger.debug('"每日签到"任务已完成...')
-    except json.JSONDecodeError as e:
-        logger.debug('"签到"任务失败, 需要重新登录, Error：', e)
-        input()
+
+    # # 签到
+    # logger.debug('"签到"任务已开启...')
+    # try:
+    #     pass
+    #     logger.debug('"每日签到"任务已完成...')
+    # except Exception as e:
+    #     logger.debug('"签到"任务失败, 需要重新登录, Error：', e)
+    #     input()
 
     try:
-        pass
-    except json.JSONDecodeError as e:
+        if Listen_on_connection(host, port):
+            logger.debug(f'Connect {host}:{port} is successful.')
+
+            app = WeWorkSign(deviceName, appPackage, appActivity)
+            app.main()
+        else:
+            raise ConnectionError(f'{deviceName} ConnectionError.')
+    except Exception as e:
         logger.debug("执行任务失败，Error：", e)
-        # clear_cookie(COOKIE_FILE_PATH)
         input()
 
     logger.debug("每日任务, 已完成.")
-    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    strtomorrow = tomorrow.strftime('%Y-%m-%d')
-    logger.debug(f"下次执行时间：{strtomorrow} {JOB_HOUR}:{JOB_MINUTE}")
+    # tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    # strtomorrow = tomorrow.strftime('%Y-%m-%d')
+    # logger.debug(f"下次执行时间：{strtomorrow} {JOB_HOUR}:{JOB_MINUTE}")
 
 
 if __name__ == '__main__':
     # job()
-    logger.debug("==================== 程序启动...")
+    logger.debug("程序启动...")
     # if not read_file(COOKIE_FILE_PATH):
     #     logger.debug("登录状态: 检测到未登录...")
     #     login()
-    logger.debug("登录状态: 检测到已登录...")
+    logger.debug("登录状态: 检测到已登录")
     logger.debug(f"定时任务: 已开启...")
     logger.debug(f"执行时间: 每日 {JOB_HOUR}:{JOB_MINUTE}")
     scheduler = BlockingScheduler()
