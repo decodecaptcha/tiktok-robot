@@ -15,7 +15,8 @@ def Listen_on_connection(host, port):
             break
     return True
 
-host = '192.168.11.195'
+# host = '192.168.11.195'
+host = '10.0.10.53'
 port = 5555
 if Listen_on_connection(host, port):
     print('connect successful !!!')

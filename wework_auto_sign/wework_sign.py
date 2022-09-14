@@ -113,6 +113,7 @@ class WeWorkSign(object):
         # else:
         #     print('报错, 不具备打卡条件, 请检查手机状态')
 
+        time.sleep(4)
         # 打卡按钮
         self.find_element_click(AppiumBy.ID, 'com.tencent.wework:id/bh6')
         print('打卡按钮')
@@ -129,6 +130,8 @@ class WeWorkSign(object):
         # print(is_element_exist(AppiumBy.ID, 'com.tencent.wework:id/bh777'))
         # print(is_element_exist(AppiumBy.ID, 'com.tencent.wework:id/bh888'))
 
+        # 完成界面截屏
+
         # 任务完成后退出app
         self.close_app()
 
@@ -140,7 +143,8 @@ class WeWorkSign(object):
 if __name__ == '__main__':
     # com.tencent.wework.launch.LaunchSplashActivity# com.tencent.wework.launch.LaunchSplashActivity
     # deviceName = '150fc297'
-    deviceName = '192.168.11.195:5555'
+    # deviceName = '192.168.11.195:5555'
+    deviceName = '10.0.10.53:5555'
     appPackage = 'com.tencent.wework'
     appActivity = '.launch.LaunchSplashActivity'
     app = WeWorkSign(deviceName, appPackage, appActivity)
